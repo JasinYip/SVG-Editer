@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<title>My SVG Editer</title>
+
+	<link rel="stylesheet/less" type="text/css" href="css/mySVGEditer.less">
+</head>
+<body>
+	<div id="toolbar">
+		<h2>创建</h2>
+		<form id="createForm">
+			<button type="button" create="rect">矩形</button>
+		</form>
+
+		<h2>形状</h2>
+		<form id="attrsForm">
+			请先创建图形
+		</form>
+	</div>
+	<div id="canvas"></div>
+
+	<!-- <script src="lib/jquery-1.11.1.min.js"></script> -->
+	<script src="lib/less-1.7.1.min.js"></script>
+	<script src="lib/coffee-script.js"></script>
+	<script type="text/coffeescript" src="js/mySVGEditer.coffee"></script>
+</body>
+</html>
