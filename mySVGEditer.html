@@ -17,6 +17,32 @@
 		<form id="attrsForm">
 			请先创建图形
 		</form>
+
+		<h2>外观和变换</h2>
+		<form id="lookForm">
+			<p id="row-fill">
+				<label>填充</label>
+				<input id="fill" type="color" value="#ffffff">
+			</p>
+			<p id="row-stroke">
+				<label>描边</label>
+				<input id="stroke" type="color" value="#ff0000">
+				<input id="strokeWidth" type="range" value="1">
+			</p>
+			<p id="row-transforms">
+				<label>translateX</label>
+				<input id="translateX" type="range" min="-400" max="400" value="0" />
+			
+				<label>translateY</label>
+				<input id="translateY" type="range" min="-400" max="400" value="0" />
+			
+				<label>rotate</label>
+				<input id="rotate" type="range" min="-180" max="180" value="0" />
+			
+				<label>scale</label>
+				<input id="scale" type="range" min="-1" max="2" step="0.01" value="1" />
+			</p>
+		</form>
 	</div>
 	<div id="canvas"></div>
 

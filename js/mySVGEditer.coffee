@@ -6,12 +6,14 @@ attrsForm  = document.getElementById "attrsForm"
 selected = null
 
 shapeInfo = 
-	rect : 'x:10,y:10,width:200,height:100,rx:0,ry:0'
+	rect : 'x:10,y:10,rx:0,ry:0,width:200,height:100'
+
 
 defaultAttrs = 
 	fill : '#ffffff',
 	stroke : '#ff0000'
 
+# Functions
 createSVG = ->
 	_svg = document.createElementNS(SVG_NS, 'svg')
 	_svg.setAttribute "width", "100%"
@@ -38,8 +40,6 @@ createControler = (shape, name, value) ->
 	attrsForm.appendChild label
 	attrsForm.appendChild controler
 
-
-
 select = (shape) ->
 	attrs = shapeInfo[shape.tagName].split ','
 	attrsForm.innerHTML = ""
@@ -57,12 +57,14 @@ select = (shape) ->
 
 	selected = shape
 
+
+# Events
 createForm.addEventListener "click", (e) ->
-	if e.target.tagName.toLowerCase() == "button"
+	if e.target.tagName.toLowerCase() is "button"
 		createShape e.target.getAttribute "create"
 
 attrsForm.addEventListener "input", (e) ->
-	if e.target.tagName.toLowerCase() == "input"
+	if e.target.tagName.toLowerCase() is "input"
 		controler = e.target
 		selected.setAttribute controler.name, controler.value
 
