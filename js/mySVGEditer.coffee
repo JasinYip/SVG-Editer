@@ -1,11 +1,12 @@
 SVG_NS = 'http://www.w3.org/2000/svg';
 
 createForm = document.getElementById "createForm"
-attrForm   = document.getElementById "attrsForm"
+attrsForm  = document.getElementById "attrsForm"
+
+selected = null
 
 shapeInfo = 
 	rect : 'x:10,y:10,width:200,height:100,rx:0,ry:0'
-
 
 defaultAttrs = 
 	fill : '#ffffff',
@@ -24,10 +25,24 @@ createShape = (shapeName) ->
 	select shape
 
 createControler = (shape, name, value) ->
+	label = document.createElement "label"
+	label.textContent = name
+
+	controler = document.createElement "input"
+	controler.setAttribute "name" , name
+	controler.setAttribute "type" , "range"
+	controler.setAttribute "value", value
+	controler.setAttribute "min"  , 0
+	controler.setAttribute "max"  , 800
+
+	attrsForm.appendChild label
+	attrsForm.appendChild controler
+
+
 
 select = (shape) ->
 	attrs = shapeInfo[shape.tagName].split ','
-	attrForm.innerHTML = ""
+	attrsForm.innerHTML = ""
 
 	while attrs.length
 		attr = attrs.shift().split ':'
@@ -40,8 +55,22 @@ select = (shape) ->
 		value = shape.getAttribute(name) || value
 		shape.setAttribute(name, value)
 
-svg = createSVG()
+	selected = shape
 
 createForm.addEventListener "click", (e) ->
 	if e.target.tagName.toLowerCase() == "button"
 		createShape e.target.getAttribute "create"
+
+attrsForm.addEventListener "input", (e) ->
+	if e.target.tagName.toLowerCase() == "input"
+		controler = e.target
+		selected.setAttribute controler.name, controler.value
+
+canvas.addEventListener "click", (e) ->
+	if e.target.tagName.toLowerCase() of shapeInfo
+		select e.target
+
+
+
+svg = createSVG()
+
