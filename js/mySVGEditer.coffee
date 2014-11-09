@@ -2,6 +2,7 @@ SVG_NS = 'http://www.w3.org/2000/svg';
 
 createForm = document.getElementById "createForm"
 attrsForm  = document.getElementById "attrsForm"
+lookForm   = document.getElementById "lookForm"
 
 selected = null
 
@@ -57,6 +58,12 @@ select = (shape) ->
 
 	selected = shape
 
+encodeTranform = (transObj) ->
+	[
+		'translate(', transObj.tx, ',', transObj.ty, ')',
+		'rotate(', transObj.rotate, ')',
+		'scale(', transObj.scale , ')'
+	].join ''
 
 # Events
 createForm.addEventListener "click", (e) ->
@@ -68,11 +75,22 @@ attrsForm.addEventListener "input", (e) ->
 		controler = e.target
 		selected.setAttribute controler.name, controler.value
 
+lookForm.addEventListener "input", (e) ->
+	if e.target.tagName.toLowerCase() isnt "input" then return
+	if !selected then return
+	if e.target.parentNode is document.getElementById("row-transforms")
+		selected.setAttribute 'transform', encodeTranform {
+			tx: translateX.value,
+			ty: translateY.value,
+			scale: scale.value,
+			rotate: rotate.value
+		}
+	else
+		selected.setAttribute e.target.id, e.target.value
+
 canvas.addEventListener "click", (e) ->
 	if e.target.tagName.toLowerCase() of shapeInfo
 		select e.target
-
-
 
 svg = createSVG()
 
