@@ -1,22 +1,24 @@
-SVG_NS = 'http://www.w3.org/2000/svg';
+SVG_NS = "http://www.w3.org/2000/svg"
 
 createForm = document.getElementById "createForm"
 attrsForm  = document.getElementById "attrsForm"
 lookForm   = document.getElementById "lookForm"
+strokeWidth = document.getElementById "stroke-width"
 
-selected = null
+selected = {}
 
 shapeInfo = 
-	rect : 'x:10,y:10,rx:0,ry:0,width:200,height:100'
+	rect : "x:10,y:10,rx:0,ry:0,width:200,height:100"
 
 
 defaultAttrs = 
-	fill : '#ffffff',
-	stroke : '#ff0000'
+	fill : "#ffffff",
+	stroke : "#ff0000",
+	"stroke-width" : 1
 
 # Functions
 createSVG = ->
-	_svg = document.createElementNS(SVG_NS, 'svg')
+	_svg = document.createElementNS(SVG_NS, "svg")
 	_svg.setAttribute "width", "100%"
 	_svg.setAttribute "height", "100%"
 	canvas.appendChild _svg
@@ -41,12 +43,28 @@ createControler = (shape, name, value) ->
 	attrsForm.appendChild label
 	attrsForm.appendChild controler
 
+updateLookControler = () ->
+	fill.value = selected.getAttribute "fill"
+	stroke.value = selected.getAttribute "stroke"
+	strokeWidth.value = selected.getAttribute "stroke-width"
+	t = decodeTransform(selected.getAttribute('transform'))
+	if t
+		translateX.value = t.tx
+		translateY.value = t.ty
+		rotate.value = t.rotate
+		scale.value = t.scale
+	else
+		translateX.value = 0
+		translateY.value = 0
+		rotate.value = 0
+		scale.value = 1
+
 select = (shape) ->
-	attrs = shapeInfo[shape.tagName].split ','
+	attrs = shapeInfo[shape.tagName].split ","
 	attrsForm.innerHTML = ""
 
 	while attrs.length
-		attr = attrs.shift().split ':'
+		attr = attrs.shift().split ":"
 		name = attr[0]
 		value = shape.getAttribute(name) || attr[1]
 		createControler shape, name, value
@@ -57,13 +75,26 @@ select = (shape) ->
 		shape.setAttribute(name, value)
 
 	selected = shape
+	updateLookControler()
 
 encodeTranform = (transObj) ->
 	[
-		'translate(', transObj.tx, ',', transObj.ty, ')',
-		'rotate(', transObj.rotate, ')',
-		'scale(', transObj.scale , ')'
-	].join ''
+		"translate(", transObj.tx, ",", transObj.ty, ")",
+		"rotate(", transObj.rotate, ")",
+		"scale(", transObj.scale , ")"
+	].join ""
+
+decodeTransform = (transString) ->
+	match = /translate\((\d+),(\d+)\)rotate\((\d+)\)scale\((\d+)\)/.exec(transString)
+	if match
+		{
+			tx: +match[1],
+			ty: +match[2],
+			rotate: +match[3],
+			scale: +match[4]
+		} 
+	else
+		null
 
 # Events
 createForm.addEventListener "click", (e) ->
@@ -76,15 +107,14 @@ attrsForm.addEventListener "input", (e) ->
 		selected.setAttribute controler.name, controler.value
 
 lookForm.addEventListener "input", (e) ->
-	if e.target.tagName.toLowerCase() isnt "input" then return
-	if !selected then return
-	if e.target.parentNode is document.getElementById("row-transforms")
-		selected.setAttribute 'transform', encodeTranform {
+	return if e.target.tagName.toLowerCase() isnt "input"
+	return if !selected
+	if e.target.parentNode is document.getElementById "row-transforms"
+		selected.setAttribute "transform", encodeTranform 
 			tx: translateX.value,
 			ty: translateY.value,
 			scale: scale.value,
 			rotate: rotate.value
-		}
 	else
 		selected.setAttribute e.target.id, e.target.value
 
