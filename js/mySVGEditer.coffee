@@ -1,8 +1,9 @@
 SVG_NS = "http://www.w3.org/2000/svg"
 
-createForm = document.getElementById "createForm"
-attrsForm  = document.getElementById "attrsForm"
-lookForm   = document.getElementById "lookForm"
+createForm  = document.getElementById "createForm"
+attrsForm   = document.getElementById "attrsForm"
+lookForm    = document.getElementById "lookForm"
+canvasSettingForm  = document.getElementById "canvasSettingForm"
 strokeWidth = document.getElementById "stroke-width"
 
 selected = {}
@@ -23,6 +24,7 @@ createSVG = ->
 	_svg.setAttribute "width", "100%"
 	_svg.setAttribute "height", "100%"
 	canvas.appendChild _svg
+	_svg.setAttribute "viewBox", "0 0 " + _svg.offsetWidth + " " + _svg.offsetHeight
 	return _svg
 
 createShape = (shapeName) ->
@@ -123,5 +125,15 @@ canvas.addEventListener "click", (e) ->
 	if e.target.tagName.toLowerCase() of shapeInfo
 		select e.target
 
+svgViewBox.addEventListener "input", (e) ->
+	if e.target.tagName.toLowerCase() is "input"
+		console.log e.target.value
+		svgWid = svg.offsetWidth * e.target.value
+		svgHgt = svg.offsetHeight * e.target.value
+
+		svg.setAttribute "viewBox", "0 0 " + svgWid + " " + svgHgt
+
 svg = createSVG()
 
+window.onresize = ->
+	svg.setAttribute("viewBox", svg.getAttribute("viewBox"))
