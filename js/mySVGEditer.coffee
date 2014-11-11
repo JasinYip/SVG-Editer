@@ -15,6 +15,7 @@ defaultAttrs =
 	fill : "#ffffff",
 	stroke : "#ff0000",
 	"stroke-width" : 1
+	transform : "translate(0,0) rotate(0) scale(1)"
 
 # Functions
 createSVG = ->
@@ -79,20 +80,20 @@ select = (shape) ->
 
 encodeTranform = (transObj) ->
 	[
-		"translate(", transObj.tx, ",", transObj.ty, ")",
-		"rotate(", transObj.rotate, ")",
+		"translate(", transObj.tx, ",", transObj.ty, ") ",
+		"rotate(", transObj.rotate, ") ",
 		"scale(", transObj.scale , ")"
 	].join ""
 
 decodeTransform = (transString) ->
-	match = /translate\((\d+),(\d+)\)rotate\((\d+)\)scale\((\d+)\)/.exec(transString)
+	match = /translate\((-?\d+),(-?\d+)\)\srotate\((-?\d+)\)\sscale\((\d+|\d+?\.\d+)\)/.exec(transString)
 	if match
 		{
 			tx: +match[1],
 			ty: +match[2],
 			rotate: +match[3],
 			scale: +match[4]
-		} 
+		}
 	else
 		null
 
