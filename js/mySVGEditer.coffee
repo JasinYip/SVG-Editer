@@ -126,12 +126,17 @@ canvas.addEventListener "click", (e) ->
 		select e.target
 
 svgViewBox.addEventListener "input", (e) ->
-	if e.target.tagName.toLowerCase() is "input"
-		console.log e.target.value
-		svgWid = svg.offsetWidth * e.target.value
-		svgHgt = svg.offsetHeight * e.target.value
+	svgWid = svg.offsetWidth * e.target.value
+	svgHgt = svg.offsetHeight * e.target.value
 
-		svg.setAttribute "viewBox", "0 0 " + svgWid + " " + svgHgt
+	svg.setAttribute "viewBox", "0 0 " + svgWid + " " + svgHgt
+
+recoverDefault.addEventListener "click", (e) ->
+	# 缩放
+	svgViewBox.value = 1
+	wid = svg.offsetWidth
+	hgt = svg.offsetHeight
+	svg.setAttribute "viewBox", "0 0 " + wid + " " + hgt
 
 svg = createSVG()
 

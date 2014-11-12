@@ -46,8 +46,13 @@
 
 		<h2>画布设置</h2>
 		<form id="canvasSettingForm">
-			<label>缩放</label>
-			<input id="svgViewBox" type="range" min="0.3" max="2" step="0.01" value="1" dir="rtl">
+			<p>
+				<label>缩放</label>
+				<input id="svgViewBox" type="range" min="0.3" max="2" step="0.01" value="1" dir="rtl">
+			</p>
+			<p>
+				<button id="recoverDefault" type="button">恢复默认</button>
+			</p>
 		</form>
 	</div>
 	<div id="canvas"></div>
