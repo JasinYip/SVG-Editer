@@ -30,7 +30,7 @@ draggable = (e) ->
 		mouseMoveY  = e.y - drag.mouseCurrentY
 		drag.target.setAttribute "x", drag.shapeCurrentX + mouseMoveX
 		drag.target.setAttribute "y", drag.shapeCurrentY + mouseMoveY
-
+		select e.target
 
 shapeInfo = 
 	rect : "x:10,y:10,rx:0,ry:0,width:200,height:100"
@@ -144,10 +144,6 @@ lookForm.addEventListener "input", (e) ->
 			rotate: rotate.value
 	else
 		selected.setAttribute e.target.id, e.target.value
-
-# canvas.addEventListener "click", (e) ->
-# 	if e.target.tagName.toLowerCase() of shapeInfo
-# 		select e.target
 
 canvas.addEventListener "mousedown", (e) ->
 	if e.target.tagName.toLowerCase() of shapeInfo
