@@ -1,16 +1,39 @@
 SVG_NS = "http://www.w3.org/2000/svg"
 
-createForm  = document.getElementById "createForm"
-attrsForm   = document.getElementById "attrsForm"
-lookForm    = document.getElementById "lookForm"
-canvasSettingForm  = document.getElementById "canvasSettingForm"
-strokeWidth = document.getElementById "stroke-width"
+createForm        = document.getElementById "createForm"
+attrsForm         = document.getElementById "attrsForm"
+lookForm          = document.getElementById "lookForm"
+canvasSettingForm = document.getElementById "canvasSettingForm"
+strokeWidth       = document.getElementById "stroke-width"
 
 selected = {}
 
+drag =
+	target : null
+	setDrag : (target, mouseCurrentX, mouseCurrentY) ->
+		this.target        = target
+		this.mouseCurrentX = mouseCurrentX
+		this.mouseCurrentY = mouseCurrentY
+		this.shapeCurrentX = +selected.getAttribute "x"
+		this.shapeCurrentY = +selected.getAttribute "y"
+		this.target.addEventListener "mousemove", draggable
+
+		return this
+	rmDrag : ->
+		this.target.removeEventListener "mousemove", draggable
+
+		return this
+
+draggable = (e) ->
+	if e.target is drag.target
+		mouseMoveX  = e.x - drag.mouseCurrentX
+		mouseMoveY  = e.y - drag.mouseCurrentY
+		drag.target.setAttribute "x", drag.shapeCurrentX + mouseMoveX
+		drag.target.setAttribute "y", drag.shapeCurrentY + mouseMoveY
+
+
 shapeInfo = 
 	rect : "x:10,y:10,rx:0,ry:0,width:200,height:100"
-
 
 defaultAttrs = 
 	fill : "#ffffff",
@@ -78,6 +101,7 @@ select = (shape) ->
 		shape.setAttribute(name, value)
 
 	selected = shape
+
 	updateLookControler()
 
 encodeTranform = (transObj) ->
@@ -121,9 +145,17 @@ lookForm.addEventListener "input", (e) ->
 	else
 		selected.setAttribute e.target.id, e.target.value
 
-canvas.addEventListener "click", (e) ->
+# canvas.addEventListener "click", (e) ->
+# 	if e.target.tagName.toLowerCase() of shapeInfo
+# 		select e.target
+
+canvas.addEventListener "mousedown", (e) ->
 	if e.target.tagName.toLowerCase() of shapeInfo
 		select e.target
+		drag.setDrag e.target, e.x, e.y
+
+canvas.addEventListener "mouseup", (e) ->
+	drag.rmDrag() if drag.target
 
 svgViewBox.addEventListener "input", (e) ->
 	svgWid = svg.offsetWidth * e.target.value
@@ -132,7 +164,7 @@ svgViewBox.addEventListener "input", (e) ->
 	svg.setAttribute "viewBox", "0 0 " + svgWid + " " + svgHgt
 
 recoverDefault.addEventListener "click", (e) ->
-	# 缩放
+	# 缩放恢复为 1.0x
 	svgViewBox.value = 1
 	wid = svg.offsetWidth
 	hgt = svg.offsetHeight
