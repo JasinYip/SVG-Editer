@@ -10,27 +10,34 @@ selected = {}
 
 drag =
 	target : null
+
 	setDrag : (target, mouseCurrentX, mouseCurrentY) ->
 		this.target        = target
 		this.mouseCurrentX = mouseCurrentX
 		this.mouseCurrentY = mouseCurrentY
 		this.shapeCurrentX = +selected.getAttribute "x"
 		this.shapeCurrentY = +selected.getAttribute "y"
-		this.target.addEventListener "mousemove", draggable
+		this.target.addEventListener "mousemove", drag.draggable
 
 		return this
+
 	rmDrag : ->
-		this.target.removeEventListener "mousemove", draggable
+		this.target.removeEventListener "mousemove", drag.draggable
+		this.target        = null
+		this.mouseCurrentX = 0
+		this.mouseCurrentY = 0
+		this.shapeCurrentX = 0
+		this.shapeCurrentY = 0
 
 		return this
 
-draggable = (e) ->
-	if e.target is drag.target
-		mouseMoveX  = e.x - drag.mouseCurrentX
-		mouseMoveY  = e.y - drag.mouseCurrentY
-		drag.target.setAttribute "x", drag.shapeCurrentX + mouseMoveX
-		drag.target.setAttribute "y", drag.shapeCurrentY + mouseMoveY
-		select e.target
+	draggable : (e) ->
+		if e.target is drag.target
+			mouseMoveX  = e.x - drag.mouseCurrentX
+			mouseMoveY  = e.y - drag.mouseCurrentY
+			drag.target.setAttribute "x", drag.shapeCurrentX + mouseMoveX
+			drag.target.setAttribute "y", drag.shapeCurrentY + mouseMoveY
+			
 
 shapeInfo = 
 	rect : "x:10,y:10,rx:0,ry:0,width:200,height:100"
@@ -65,6 +72,7 @@ createControler = (shape, name, value) ->
 	controler.setAttribute "value", value
 	controler.setAttribute "min"  , 0
 	controler.setAttribute "max"  , 800
+	controler.setAttribute "id"   , "ctrl" + name
 
 	attrsForm.appendChild label
 	attrsForm.appendChild controler
