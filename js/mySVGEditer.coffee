@@ -10,6 +10,8 @@ selected = {}
 
 drag =
 	target : null
+	targetCtrlX : null
+	targetCtrlY : null
 
 	setDrag : (target, mouseCurrentX, mouseCurrentY) ->
 		this.target        = target
@@ -17,6 +19,8 @@ drag =
 		this.mouseCurrentY = mouseCurrentY
 		this.shapeCurrentX = +selected.getAttribute "x"
 		this.shapeCurrentY = +selected.getAttribute "y"
+		this.targetCtrlX = document.getElementById "ctrlx"
+		this.targetCtrlY = document.getElementById "ctrly"
 		this.target.addEventListener "mousemove", drag.draggable
 
 		return this
@@ -28,6 +32,8 @@ drag =
 		this.mouseCurrentY = 0
 		this.shapeCurrentX = 0
 		this.shapeCurrentY = 0
+		this.targetCtrlX   = null
+		this.targetCtrlY   = null
 
 		return this
 
@@ -37,16 +43,17 @@ drag =
 			mouseMoveY  = e.y - drag.mouseCurrentY
 			drag.target.setAttribute "x", drag.shapeCurrentX + mouseMoveX
 			drag.target.setAttribute "y", drag.shapeCurrentY + mouseMoveY
-			
+			drag.targetCtrlX.value = drag.shapeCurrentX + mouseMoveX
+			drag.targetCtrlY.value = drag.shapeCurrentY + mouseMoveY
 
 shapeInfo = 
 	rect : "x:10,y:10,rx:0,ry:0,width:200,height:100"
 
 defaultAttrs = 
-	fill : "#ffffff",
-	stroke : "#ff0000",
+	fill           : "#ffffff"
+	stroke         : "#ff0000"
 	"stroke-width" : 1
-	transform : "translate(0,0) rotate(0) scale(1)"
+	transform      : "translate(0,0) rotate(0) scale(1)"
 
 # Functions
 createSVG = ->
