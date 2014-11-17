@@ -117,6 +117,10 @@ select = (shape) ->
 
 	selected = shape
 
+	parentElem = selected.parentNode
+	selected.parentNode.removeChild(selected)
+	parentElem.appendChild(selected)
+
 	updateLookControler()
 
 encodeTranform = (transObj) ->
